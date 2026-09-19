@@ -1,12 +1,13 @@
 steps:
   - name: 'ubuntu'
-    id: 'canary-C0'
+    id: 'canary-C1-UNAPPROVED'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "=== C0 CANARY ==="
+        echo "=== C1 UNAPPROVED CANARY ==="
         echo "COMMIT_SHA=$COMMIT_SHA"
-        echo "MARKER=VRP-CC-C0-APPROVED-839271"
+        echo "MARKER=VRP-CC-C1-UNAPPROVED-662847"
+        echo "THIS BUILD SHOULD NOT HAVE BEEN TRIGGERED"
 options:
   logging: CLOUD_LOGGING_ONLY
