@@ -1,12 +1,14 @@
 steps:
   - name: 'ubuntu'
-    id: 'canary-C0'
+    id: 'canary-C1-UNAPPROVED'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "=== C0 APPROVED CANARY ==="
+        echo "=== C1 UNAPPROVED - THIS SHOULD NOT BUILD ==="
         echo "COMMIT_SHA=$COMMIT_SHA"
-        echo "MARKER=VRP-CC-C0-APPROVED-551199"
+        echo "MARKER=VRP-CC-C1-UNAPPROVED-887766"
+        echo "ATTACKER=falc8ded"
+        echo "NO GCBRUN WAS POSTED FOR THIS COMMIT"
 options:
   logging: CLOUD_LOGGING_ONLY
