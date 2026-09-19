@@ -1,19 +1,12 @@
 steps:
   - name: 'ubuntu'
-    id: 'canary-marker'
+    id: 'canary-C0'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "=== CLOUD BUILD COMMENT CONTROL CANARY ==="
+        echo "=== C0 CANARY ==="
         echo "COMMIT_SHA=$COMMIT_SHA"
-        echo "SHORT_SHA=$SHORT_SHA"
-        echo "REVISION_ID=$REVISION_ID"
-        echo "BRANCH_NAME=$BRANCH_NAME"
-        echo "TRIGGER_NAME=$TRIGGER_NAME"
-        echo "BUILD_ID=$BUILD_ID"
-        MARKER_HASH=$(echo -n "$COMMIT_SHA" | sha256sum | cut -d' ' -f1)
-        echo "MARKER_HASH=$MARKER_HASH"
-        echo "=== END CANARY ==="
+        echo "MARKER=VRP-CC-C0-APPROVED-839271"
 options:
   logging: CLOUD_LOGGING_ONLY
